@@ -1,15 +1,3 @@
-"""
-from Qt import QtWidgets
-
-class MyWindow(QtWidgets.QDialog):
-    def __init__(self, parent=None):
-        super(MyWindow, self).__init__(parent)
-        self.setWindowTitle("My Window Title")
-        
-a = MyWindow()
-a.show()
-"""    
-
 from Qt import QtWidgets, QtCore, QtGui
 from maya import cmds 
 
