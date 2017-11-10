@@ -1,6 +1,6 @@
 from Qt import QtWidgets, QtCore, QtGui
 from maya import cmds 
-
+import sys
 class HandRig(QtWidgets.QWidget):
 
 	def __init__(self, parent=None):
@@ -130,6 +130,11 @@ class HandRig(QtWidgets.QWidget):
 		arm_button.clicked.connect(self.button)
 		layout.addWidget(arm_button, 6, 3)
 
+		oImage =  QtGui.QImage("test.png")
+		sImage = oImage.scaled(QtCore.QSize(300,200))
+		palette = QtGui.QPalette()
+		palette.setBrush(10, QtGui.QBrush(sImage))
+		self.setPalette(palette)
 
 		print "I am in the buildUI()"
 
