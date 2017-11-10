@@ -130,6 +130,8 @@ class HandRig(QtWidgets.QWidget):
 		arm_button.clicked.connect(self.button)
 		layout.addWidget(arm_button, 6, 3)
 
+		# change background
+
 		oImage =  QtGui.QImage("test.png")
 		sImage = oImage.scaled(QtCore.QSize(300,200))
 		palette = QtGui.QPalette()
