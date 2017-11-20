@@ -6,6 +6,6 @@ def createJoints(selection=selected()):
     for item in selection:
         matchTransform(joint(), item)
     #parent = selected()[0].root()
-	#orientJoint(parent)
+    #orientJoint(parent)
 
 createJoints()
