@@ -9,6 +9,8 @@ def createJoints(selection=pm.selected()):
     pm.select(pm.selected()[0].root())
     alignJoints()
 	
+# recursive function that properly orinets all joints created using createJoints
+
 def alignJoints():
     pm.selected()[0].orientJoint('xyz', sao='yup')
     try:
@@ -16,7 +18,7 @@ def alignJoints():
         print "I am in the if statement"
         alignJoints()
     except:
-        pm.matchTransform(pm.selected()[0], pm.selected()[0].getParent(), rot=True)
+        pm.joint(edit=True, orientation=(0, 0, 0))
 
 
 createJoints()
