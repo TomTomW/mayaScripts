@@ -1,17 +1,20 @@
+
+import sys
+
 from Qt import QtWidgets, QtCore, QtGui
 from maya import cmds 
-import sys
+
+
 class HandRig(QtWidgets.QWidget):
 
-	def __init__(self, parent=None):
+	def __init__(self, name, parent=None):
 
 		try:
 			cmds.deleteUI('Hand Rig')
-
 		except:
 			print 'No other UI exsits'
 
-		super(HandRig, self).__init__(parent)
+		super(HandRig, self).__init__(name, parent)
 		self.setWindowTitle("Hand Rig")
 
 		self.buildUI()
@@ -19,11 +22,9 @@ class HandRig(QtWidgets.QWidget):
 	def buildUI(self):
 
 		# Builds the user interface for the rig
-
 		layout = QtWidgets.QGridLayout(self)
 
 		# Thumb finger Contorl Buttons
-
 		thumb01_button = QtWidgets.QPushButton('thumb01_ctrl')
 		thumb01_button.setFixedWidth(75)
 		thumb01_button.setFixedHeight(100)
@@ -37,7 +38,6 @@ class HandRig(QtWidgets.QWidget):
 		layout.addWidget(thumb02_button, 3, 1)
 
 		# Index finger Control Buttons
-
 		index01_button = QtWidgets.QPushButton('index01_ctrl')
 		index01_button.setFixedWidth(75)
 		index01_button.setFixedHeight(100)
@@ -57,7 +57,6 @@ class HandRig(QtWidgets.QWidget):
 		layout.addWidget(index03_button, 1, 2)
 
 		# Middle Finger Control Buttons
-
 		middle01_button = QtWidgets.QPushButton('middle01_ctrl')
 		middle01_button.setFixedWidth(75)
 		middle01_button.setFixedHeight(100)
@@ -77,7 +76,6 @@ class HandRig(QtWidgets.QWidget):
 		layout.addWidget(middle03_button, 1, 3)
 
 		# Ring Finger Control Buttons
-
 		ring01_button = QtWidgets.QPushButton('ring01_ctrl')
 		ring01_button.setFixedWidth(75)
 		ring01_button.setFixedHeight(100)
@@ -97,7 +95,6 @@ class HandRig(QtWidgets.QWidget):
 		layout.addWidget(ring03_button, 1, 4)
 
 		# Pinkie Finger Control Buttons
-
 		pinkie01_button = QtWidgets.QPushButton('pinkie01_ctrl')
 		pinkie01_button.setFixedWidth(75)
 		pinkie01_button.setFixedHeight(100)
@@ -117,7 +114,6 @@ class HandRig(QtWidgets.QWidget):
 		layout.addWidget(pinkie03_button, 1, 5)
 
 		# Hand Control Button
-
 		hand_button = QtWidgets.QPushButton('wrist_ctrl')
 		hand_button.setFixedWidth(75)
 		hand_button.setFixedHeight(100)
@@ -125,18 +121,15 @@ class HandRig(QtWidgets.QWidget):
 		layout.addWidget(hand_button, 5, 3)
 
 		# arm Control Button
-
 		arm_button = QtWidgets.QPushButton('arm_ctrl')
 		arm_button.clicked.connect(self.button)
 		layout.addWidget(arm_button, 6, 3)
 
-		# change background
-
-		oImage =  QtGui.QImage("test.png")
+		'''oImage =  QtGui.QImage("test.png")
 		sImage = oImage.scaled(QtCore.QSize(300,200))
 		palette = QtGui.QPalette()
 		palette.setBrush(10, QtGui.QBrush(sImage))
-		self.setPalette(palette)
+		self.setPalette(palette)'''
 
 		print "I am in the buildUI()"
 
@@ -152,8 +145,8 @@ class HandRig(QtWidgets.QWidget):
 		print 'The BUTTON has been clicked'
 
 	def selectCtrl(self, selectedButton):
-		print'I am in' + ' ' + selectedButton
+		print 'I am in' + ' ' + selectedButton
 		'''cmds.select('hand_M_' + selectedButton)
 
-		print ('I have selected' + selectedButton)'''
+		print('I have selected' + selectedButton)'''
 
