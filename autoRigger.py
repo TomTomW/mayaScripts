@@ -13,6 +13,7 @@ from Qt import QtWidgets, QtCore, QtGui
 
 def buildUI():
 
+
     layout = pm.window(title='Joint Creator', widthHeight=(250, 200))
     pm.columnLayout(adjustableColumn=True)
     pm.text(label='Part of body')
@@ -26,9 +27,9 @@ def buildUI():
     pm.menuItem(label='M')
     pm.menuItem(label='R')
     pm.text(label='Name of Joints')
-    pm.textField()
-    pm.checkBox(label='FK/IK Blend')
-    pm.button(label='Create')
+    jointName = pm.textField()
+    blend = pm.checkBox(label='FK/IK Blend')
+    pm.button(label='Create', command='createJoints()')
     pm.showWindow(layout)
 
 
