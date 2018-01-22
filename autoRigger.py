@@ -53,10 +53,3 @@ def alignJoints():
 
 #createJoints()
 buildUI()
-
-'''testWin = pm.window(title = 'TempWin', widthHeight = (200, 55))
-pm.columnLayout()
-pm.button(label = 'nothing')
-pm.button( label='Close', command=('pm.deleteUI(\"' + testWin + '\", window=True)')) 
-#pm.setParent('..')
-pm.showWindow(testWin)'''
