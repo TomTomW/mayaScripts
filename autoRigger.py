@@ -1,37 +1,54 @@
-'''
-check box for fk/ik blend
-
-text box for naming the joints.
-
-name joints on creation.
-
-function that adds IK/FK to two sets of copied joints
-'''
-
 import pymel.core as pm
 from Qt import QtWidgets, QtCore, QtGui
 
-def buildUI():
+class AutoRigUI(QtWidgets.QDialog):
+
+    def __init__(self):
+        super(AutoRigUI, self).__init__()
+        self.setWindowTitle('TW Auto Rigger')
+        self.setFixedSize(300,150)
+
+        try:
+            cmds.deleteUI('TW Auto Rigger')
+        except:
+            print('No other UI exists')
+
+        self.buildUI()
+
+    def buildUI(self):
+        layout = QtWidgets.QGridLayout(self)
+
+        guide_button = QtWidgets.QPushButton('Guides')
+        guide_button.setFixedWidth(125)
+        guide_button.setFixedHeight(25)
+        guide_button.clicked.connect(self.rigAttr)
+        layout.addWidget(guide_button, 1, 0)
+
+        complete_button = QtWidgets.QPushButton('Complete')
+        complete_button.setFixedWidth(125)
+        complete_button.setFixedHeight(25)
+        complete_button.clicked.connect(self.complete)
+        layout.addWidget(complete_button, 1, 1)
+
+    def rigAttr(self, s = pm.selected()):
+        #creates attrubute on selected object /// Will check in the future if the selected object is a joint.
+        if s.type == 'joint'
+        pm.addAttr(attributeType='enum', longName='riggingAttribute', enumName='-----', keyable=True)
+        pm.addAttr(attributeType='enum', longName='partOfBody', enumName='None:Arm:Leg:Spine:Hands', keyable=True)
+
+    def complete(self, bodyPart=pm.getAttr('pm.ls(type="joint").partOfBody')):
+        #Not working, but will use selceted body part to name the new joints properly.
+        print('The part of the body selected is: %s' % bodyPart)
 
 
-    layout = pm.window(title='Joint Creator', widthHeight=(250, 200))
-    pm.columnLayout(adjustableColumn=True)
-    pm.text(label='Part of body')
-    pm.optionMenu()
-    pm.menuItem(label='None')
-    pm.menuItem(label='Arm')
-    pm.menuItem(label='Leg')
-    pm.text(label='Location')
-    pm.optionMenu()
-    pm.menuItem(label='L')
-    pm.menuItem(label='M')
-    pm.menuItem(label='R')
-    pm.text(label='Name of Joints')
-    jointName = pm.textField()
-    blend = pm.checkBox(label='FK/IK Blend')
-    pm.button(label='Create', command='createJoints()')
-    pm.showWindow(layout)
+def showUI():
+    ui = AutoRigUI()
+    ui.show()
+    return ui
 
+################### Joint Creator #########################################
+
+# Takes in a list of selected objs in the order the joints will be created.
 
 def createJoints(selection=pm.selected()):
     pm.select(clear=True)
@@ -39,7 +56,10 @@ def createJoints(selection=pm.selected()):
         pm.matchTransform(pm.joint(), item)
     pm.select(pm.selected()[0].root())
     alignJoints()
-	
+
+
+# recursive function that properly orinets all joints created using createJoints
+
 def alignJoints():
     pm.selected()[0].orientJoint('xyz', sao='yup')
     try:
@@ -48,15 +68,5 @@ def alignJoints():
     except:
         pm.joint(edit=True, orientation=(0, 0, 0))
 
-'''def copyJoints():
-    pass'''
-
 #createJoints()
-buildUI()
-
-'''testWin = pm.window(title = 'TempWin', widthHeight = (200, 55))
-pm.columnLayout()
-pm.button(label = 'nothing')
-pm.button( label='Close', command=('pm.deleteUI(\"' + testWin + '\", window=True)')) 
-#pm.setParent('..')
-pm.showWindow(testWin)'''
+ui = showUI()
