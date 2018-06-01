@@ -69,8 +69,6 @@ def alignJoints():
         pm.joint(edit=True, orientation=(0, 0, 0))
 
 #createJoints()
-<<<<<<< HEAD
+
 ui = showUI()
-=======
-buildUI()
->>>>>>> 65584eace7ca02cbc06781f669050b26dcabe51d
+
