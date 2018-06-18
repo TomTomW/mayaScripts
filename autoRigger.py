@@ -8,10 +8,12 @@ class AutoRigUI(QtWidgets.QDialog):
         self.setWindowTitle('TW Auto Rigger')
         self.setFixedSize(300,150)
 
+        self.parts=['None', 'Arm', 'Leg', 'Spine', 'Hands']
+
         try:
             cmds.deleteUI('TW Auto Rigger')
         except:
-            print('No other UI exists')
+            pass
 
         self.buildUI()
 
@@ -32,13 +34,39 @@ class AutoRigUI(QtWidgets.QDialog):
 
     def rigAttr(self, s = pm.selected()):
         #creates attrubute on selected object /// Will check in the future if the selected object is a joint.
-        if s.type == 'joint'
-        pm.addAttr(attributeType='enum', longName='riggingAttribute', enumName='-----', keyable=True)
-        pm.addAttr(attributeType='enum', longName='partOfBody', enumName='None:Arm:Leg:Spine:Hands', keyable=True)
 
-    def complete(self, bodyPart=pm.getAttr('pm.ls(type="joint").partOfBody')):
-        #Not working, but will use selceted body part to name the new joints properly.
-        print('The part of the body selected is: %s' % bodyPart)
+        #probably should only add Rig Attribute to parent???
+        guideJoints()
+        if s[0].nodeType() == 'joint':
+            pm.addAttr(attributeType='enum', longName='riggingAttribute', enumName='-----', keyable=True)
+            pm.addAttr(attributeType='enum', longName='partOfBody', enumName='None:Arm:Leg:Spine:Hands', keyable=True)
+        else:
+            print "please select joint"
+
+    def guideJoints(self, selected = pm.selected()):
+
+        pm.select(hi=True)
+        joints =  pm.selected()
+        counter = 1
+        for i in joints:
+            pm.rename(i, 'guide_joint_' + str(counter))
+            counter += 1
+
+    def complete(self, bodyPart=pm.ls(type='joint')):
+        '''
+        #################################################
+        Not working, but will use selceted body part to name the new joints properly. In the future
+        will only affect joints that are names with the prefix "guide"
+
+        Returns: Maya Attribute does not exist (or is not unique):: u'i.partOfBody'
+
+        #################################################
+        '''
+        tempList = []
+        for i in bodyPart:
+            tempList.append(pm.getAttr('i.partOfBody'))
+        print tempList
+        #print('The part of the body selected is: %s' % self.parts[tempList[0]])
 
 
 def showUI():
@@ -69,6 +97,4 @@ def alignJoints():
         pm.joint(edit=True, orientation=(0, 0, 0))
 
 #createJoints()
-
 ui = showUI()
-
