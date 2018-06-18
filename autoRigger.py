@@ -32,41 +32,50 @@ class AutoRigUI(QtWidgets.QDialog):
         complete_button.clicked.connect(self.complete)
         layout.addWidget(complete_button, 1, 1)
 
-    def rigAttr(self, s = pm.selected()):
-        #creates attrubute on selected object /// Will check in the future if the selected object is a joint.
 
-        #probably should only add Rig Attribute to parent???
-        guideJoints()
-        if s[0].nodeType() == 'joint':
-            pm.addAttr(attributeType='enum', longName='riggingAttribute', enumName='-----', keyable=True)
-            pm.addAttr(attributeType='enum', longName='partOfBody', enumName='None:Arm:Leg:Spine:Hands', keyable=True)
-        else:
-            print "please select joint"
+    def guideJoints(self):
 
-    def guideJoints(self, selected = pm.selected()):
-
+        pm.select(pm.selected()[0].root())
         pm.select(hi=True)
         joints =  pm.selected()
         counter = 1
-        for i in joints:
-            pm.rename(i, 'guide_joint_' + str(counter))
+        for each in joints:
+            pm.rename(each, 'guide_joint_' + str(counter))
             counter += 1
+
+    def rigAttr(self):
+        #creates attrubute on selected object /// Will check in the future if the selected object is a joint.
+
+        #probably should only add Rig Attribute to parent???
+        selected = pm.selected()
+        if selected == []:
+            print "please select joint"
+        elif selected[0].nodeType() == 'joint':
+            self.guideJoints()
+            pm.addAttr(attributeType='enum', longName='riggingAttribute', enumName='-----', keyable=True)
+            pm.addAttr(attributeType='enum', longName='partOfBody', enumName='None:Arm:Leg:Spine:Hands', keyable=True)
+        else:
+            print 'rigAttr() I am in the else statement'
+
+        return pm.select(pm.selected()[0].root())
+
+
+
 
     def complete(self, bodyPart=pm.ls(type='joint')):
         '''
         #################################################
-        Not working, but will use selceted body part to name the new joints properly. In the future
-        will only affect joints that are names with the prefix "guide"
+        In the future will only affect joints that are names with the prefix "guide"
 
-        Returns: Maya Attribute does not exist (or is not unique):: u'i.partOfBody'
+        Will reference json file for proper names for completed joints.
 
         #################################################
         '''
         tempList = []
-        for i in bodyPart:
-            tempList.append(pm.getAttr('i.partOfBody'))
-        print tempList
-        #print('The part of the body selected is: %s' % self.parts[tempList[0]])
+        for each in bodyPart:
+            pm.select(each)
+            tempList.append(pm.getAttr('.partOfBody'))
+        print('The part of the body selected is: %s' % self.parts[tempList[0]])
 
 
 def showUI():
