@@ -1,24 +1,32 @@
-import pymel.core as pm 
+import maya.cmds as cmds
 
-# Takes in a list of selected objs in the order the joints will be created. 
 
-def createJoints(selection=pm.selected()):
-    pm.select(clear=True)
+# Takes in a list of selected objs in the order the joints will be created.
+
+def createJoints(selection=cmds.ls(sl=1)):
+    # There is probably a better way to do this.
+    cmds.select(clear=True)
     for item in selection:
-        pm.matchTransform(pm.joint(), item)
-    pm.select(pm.selected()[0].root())
+        print
+        item
+        cmds.matchTransform(cmds.joint(), item)
+    # cmds.select((cmds.ls(sl=1))[0].root())
     alignJoints()
-	
+
+
 # recursive function that properly orinets all joints created using createJoints
 
+
 def alignJoints():
-    pm.selected()[0].orientJoint('xyz', sao='yup')
+    # Giving unicode error. FIX
+    cmds.ls(sl=1)[0].orientJoint('xyz', sao='yup')
     try:
-        pm.select(pm.listRelatives(children=True)[0])
-        print "I am in the if statement"
+        cmds.select(cmds.listRelatives(children=True)[0])
+        print
+        "I am in the if statement"
         alignJoints()
     except:
-        pm.joint(edit=True, orientation=(0, 0, 0))
+        cmds.joint(edit=True, orientation=(0, 0, 0))
 
 
 createJoints()
