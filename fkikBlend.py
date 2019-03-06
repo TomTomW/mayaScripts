@@ -109,16 +109,19 @@ def ctrlSpace(targets, name='Space'):
                 ctrlGrp = cmds.group(em=True, name=target + name)
                 matchXfos(target, ctrlGrp)
                 cmds.parent(target, ctrlGrp)
+                return ctrlGrp
 
         elif type(targets) == list:
             ctrlGrp = cmds.group(em=True, name=targets[0] + name)
             matchXfos(targets[0], ctrlGrp)
             cmds.parent(targets[0], ctrlGrp)
+            return ctrlGrp
 
         else:
             ctrlGrp = cmds.group(em=True, name=targets + name)
             matchXfos(targets, ctrlGrp)
             cmds.parent(targets, ctrlGrp)
+            return ctrlGrp
 
     except IndexError:
         print '//Error//: Something needs to be selected for ctrlSpace() to run!!!'
@@ -167,8 +170,8 @@ def settingsCtrl(blendJnts, ctrlColor=None):
     # creates setting ctrl at end the last joint in blendJoints. Adds attribute to control 'fkikBlend' connects to blendJnt constraints. 
     
     ctrl = curves.ctrlCurves(name='settings_ctrl', type='pin', color=ctrlColor)
-    ctrlSpace(ctrl)
-    cmds.parentConstraint(blendJnts[2], ctrl)
+    ctrlGrp = ctrlSpace(ctrl)
+    cmds.parentConstraint(blendJnts[2], ctrlGrp)
     cmds.addAttr(longName='fkikBlend', niceName='FKIK Blend', defaultValue=0.0, minValue=0.0, maxValue=1.0,
                  hidden=False, keyable=True)
     plusMinus = cmds.createNode('plusMinusAverage')
