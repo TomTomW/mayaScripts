@@ -1,5 +1,68 @@
 import maya.cmds as cmds
-from utils import midpoint
+import maya.OpenMaya as om
+
+#--------------------------------------------------------------------------------------------------
+def ctrlSpace(targets, name='Space'):
+    # Parents target under a group created at the same location.
+
+    try:
+        if type(targets) == list and len(targets) > 1:
+            for target in targets:
+                ctrlGrp = cmds.group(em=True, name=target + name)
+                matchXfos(target, ctrlGrp)
+                cmds.parent(target, ctrlGrp)
+                return ctrlGrp
+
+        elif type(targets) == list:
+            ctrlGrp = cmds.group(em=True, name=targets[0] + name)
+            matchXfos(targets[0], ctrlGrp)
+            cmds.parent(targets[0], ctrlGrp)
+            return ctrlGrp
+
+        else:
+            ctrlGrp = cmds.group(em=True, name=targets + name)
+            matchXfos(targets, ctrlGrp)
+            cmds.parent(targets, ctrlGrp)
+            return ctrlGrp
+
+    except IndexError:
+        print '//Error//: Something needs to be selected for ctrlSpace() to run!!!'
+
+
+#--------------------------------------------------------------------------------------------------
+def matchXfos(srcObj, target):
+    # match transforms of srcObj to the target
+
+    srcXfo = cmds.xform(srcObj, query=True, worldSpace=True, matrix=True)
+    cmds.xform(target, worldSpace=True, matrix=srcXfo)
+
+
+#--------------------------------------------------------------------------------------------------
+def midpoint(points, pvDist=2):
+    # creates control positioned for a midpoint. Returns control
+    # using Marco Giordano method for finding the midpoint
+
+    start = cmds.xform(points[0], q=1, ws=1, t=1)
+    mid = cmds.xform(points[1], q=1, ws=1, t=1)
+    end = cmds.xform(points[2], q=1, ws=1, t=1)
+
+    startV = om.MVector(start[0], start[1], start[2])
+    midV = om.MVector(mid[0], mid[1], mid[2])
+    endV = om.MVector(end[0], end[1], end[2])
+
+    startEnd = endV - startV
+    startMid = midV - startV
+
+    dotP = startMid * startEnd
+    proj = float(dotP) / float(startEnd.length())
+    startEndN = startEnd.normal()
+    projV = startEndN * proj
+
+    arrowV = startMid - projV
+    arrowV *= pvDist
+    finalV = arrowV + midV
+
+    return [finalV.x, finalV.y, finalV.z]
 
 #--------------------------------------------------------------------------------------------------
 def orient_joints(selected_joints=cmds.ls(sl=1, type="joint")):
@@ -45,16 +108,3 @@ def orient_joints(selected_joints=cmds.ls(sl=1, type="joint")):
         else:
             # if the joint does not have any children zero the joint orients. 
             cmds.makeIdentity(selected_joint, jointOrient=True, apply=True)
-
-#--------------------------------------------------------------------------------------------------
-def createJoints(selection=cmds.ls(sl=1)):
-    # creates joint at the location of the order of selection. Uses orient_joint to orient the joints properly.
-    cmds.select(clear=True)
-    created_joints = []
-    for item in selection:
-        new_joint = cmds.joint()
-        cmds.matchTransform(new_joint, item)
-        created_joints.append(new_joint)
-    orient_joints(created_joints)
-
-createJoints()
